@@ -5,28 +5,23 @@
 Fixed::Fixed()
 {
 	m_value = 0;
-	// std::cout << "Default constructor called" << std::endl;
 }
 
-Fixed::Fixed(const int &param) : m_value(param << m_num)
+Fixed::Fixed(const int &param) : m_value(param << FRAC_BITS)
 {
-	// std::cout << "Int contructor called" << std::endl;
 }
 
-Fixed::Fixed(const float &param) : m_value(std::roundf(param * (1 << 8)))
+Fixed::Fixed(const float &param) : m_value(roundf(param * (1 << FRAC_BITS)))
 {
-	// std::cout << "Float contructor called" << std::endl;
 }
 
 Fixed::Fixed(const Fixed &other)
 {
-	// std::cout << "Copy constructor called" << std::endl;
 	*this = other;
 }
 
 Fixed &Fixed::operator=(const Fixed &other)
 {
-	// std::cout << "Copy assignment operator called" << std::endl;
 	if (this != &other)
 	{
 		this->m_value = other.m_value;
@@ -36,7 +31,6 @@ Fixed &Fixed::operator=(const Fixed &other)
 
 Fixed::~Fixed()
 {
-	// std::cout << "Destructor called" << std::endl;
 }
 
 std::ostream &operator<<(std::ostream &out, const Fixed &f)
@@ -91,16 +85,16 @@ Fixed Fixed::operator-(Fixed const &rhs) const
 Fixed Fixed::operator*(Fixed const &rhs) const
 {
 	Fixed result;
-	long temp_val = (long)(this->m_value) * (long)(rhs.m_value);
+	long temp_val = static_cast<long>(this->m_value) * static_cast<long>(rhs.m_value);
 
-	result.setRawBits(temp_val >> m_num);
+	result.setRawBits(temp_val >> FRAC_BITS);
 	return result;
 }
 
 Fixed Fixed::operator/(Fixed const &rhs) const
 {
 	Fixed result;
-	long temp_val = (long)(this->m_value) << m_num;
+	long temp_val = static_cast<long>(this->m_value) << FRAC_BITS;
 
 	result.setRawBits(temp_val / rhs.m_value);
 	return result;
@@ -150,7 +144,7 @@ Fixed const &Fixed::max(Fixed const &a, Fixed const &b)
 		return b;
 }
 
-Fixed& Fixed::min(Fixed& a, Fixed& b)
+Fixed &Fixed::min(Fixed &a, Fixed &b)
 {
 	if (a < b)
 		return a;
@@ -158,7 +152,7 @@ Fixed& Fixed::min(Fixed& a, Fixed& b)
 		return b;
 }
 
-Fixed& Fixed::max(Fixed& a, Fixed& b)
+Fixed &Fixed::max(Fixed &a, Fixed &b)
 {
 	if (a > b)
 		return a;
@@ -168,7 +162,6 @@ Fixed& Fixed::max(Fixed& a, Fixed& b)
 
 int Fixed::getRawBits(void) const
 {
-	// std::cout << "getRawBits member function called" << std::endl;
 	return m_value;
 }
 
@@ -179,10 +172,10 @@ void Fixed::setRawBits(int const raw)
 
 float Fixed::toFloat(void) const
 {
-	return (float)m_value / (1 << m_num);
+	return static_cast<float>(m_value) / (1 << FRAC_BITS);
 }
 
 int Fixed::toInt(void) const
 {
-	return m_value >> m_num;
+	return m_value >> FRAC_BITS;
 }
