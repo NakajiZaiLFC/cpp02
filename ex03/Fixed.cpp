@@ -2,18 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-Fixed::Fixed()
-{
-	m_value = 0;
-}
-
-Fixed::Fixed(const int &param) : m_value(param << FRAC_BITS)
-{
-}
-
-Fixed::Fixed(const float &param) : m_value(roundf(param * (1 << FRAC_BITS)))
-{
-}
+Fixed::Fixed() : m_value(0) {}
 
 Fixed::Fixed(const Fixed &other)
 {
@@ -29,9 +18,11 @@ Fixed &Fixed::operator=(const Fixed &other)
 	return *this;
 }
 
-Fixed::~Fixed()
-{
-}
+Fixed::~Fixed() {}
+
+Fixed::Fixed(const int &param) : m_value(param << FRAC_BITS) {}
+
+Fixed::Fixed(const float &param) : m_value(roundf(param * (1 << FRAC_BITS))) {}
 
 std::ostream &operator<<(std::ostream &out, const Fixed &f)
 {
@@ -71,14 +62,18 @@ bool Fixed::operator!=(Fixed const &rhs) const
 Fixed Fixed::operator+(Fixed const &rhs) const
 {
 	Fixed result;
-	result.setRawBits(this->m_value + rhs.m_value);
+	long temp_val = static_cast<long>(this->m_value) + static_cast<long>(rhs.m_value);
+
+	result.setRawBits(static_cast<int>(temp_val));
 	return result;
 }
 
 Fixed Fixed::operator-(Fixed const &rhs) const
 {
 	Fixed result;
-	result.setRawBits(this->m_value - rhs.m_value);
+	long temp_val = static_cast<long>(this->m_value) - static_cast<long>(rhs.m_value);
+
+	result.setRawBits(static_cast<int>(temp_val));
 	return result;
 }
 
@@ -94,8 +89,10 @@ Fixed Fixed::operator*(Fixed const &rhs) const
 Fixed Fixed::operator/(Fixed const &rhs) const
 {
 	Fixed result;
-	long temp_val = static_cast<long>(this->m_value) << FRAC_BITS;
+	if (rhs.m_value == 0)
+		return result;
 
+	long temp_val = static_cast<long>(this->m_value) << FRAC_BITS;
 	result.setRawBits(temp_val / rhs.m_value);
 	return result;
 }

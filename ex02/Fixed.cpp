@@ -2,9 +2,8 @@
 #include <iostream>
 #include <cmath>
 
-Fixed::Fixed()
+Fixed::Fixed() : m_value(0)
 {
-	m_value = 0;
 	std::cout << "Default constructor called" << std::endl;
 }
 
@@ -77,14 +76,18 @@ bool Fixed::operator!=(Fixed const &rhs) const
 Fixed Fixed::operator+(Fixed const &rhs) const
 {
 	Fixed result;
-	result.setRawBits(this->m_value + rhs.m_value);
+	long temp_val = static_cast<long>(this->m_value) + static_cast<long>(rhs.m_value);
+
+	result.setRawBits(static_cast<int>(temp_val));
 	return result;
 }
 
 Fixed Fixed::operator-(Fixed const &rhs) const
 {
 	Fixed result;
-	result.setRawBits(this->m_value - rhs.m_value);
+	long temp_val = static_cast<long>(this->m_value) - static_cast<long>(rhs.m_value);
+
+	result.setRawBits(static_cast<int>(temp_val));
 	return result;
 }
 
@@ -100,8 +103,10 @@ Fixed Fixed::operator*(Fixed const &rhs) const
 Fixed Fixed::operator/(Fixed const &rhs) const
 {
 	Fixed result;
-	long temp_val = static_cast<long>(this->m_value) << FRAC_BITS;
+	if (rhs.m_value == 0)
+		return result;
 
+	long temp_val = static_cast<long>(this->m_value) << FRAC_BITS;
 	result.setRawBits(temp_val / rhs.m_value);
 	return result;
 }

@@ -28,8 +28,7 @@ fclean: clean
 
 re: fclean all
 
-run:
-	$(MAKE) re
+run:re
 	clear
 	valgrind --leak-check=full --show-leak-kinds=all -q ./$(NAME)
 
