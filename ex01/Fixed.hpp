@@ -18,7 +18,7 @@ public:
 
 private:
 	int m_value;
-	static const int m_num = 8;
+	static const int FRAC_BITS = 8;
 };
 
 std::ostream &operator<<(std::ostream &out, const Fixed &f);

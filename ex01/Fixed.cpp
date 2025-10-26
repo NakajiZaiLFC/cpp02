@@ -2,18 +2,17 @@
 #include <iostream>
 #include <cmath>
 
-Fixed::Fixed()
+Fixed::Fixed() : m_value(0)
 {
-	m_value = 0;
 	std::cout << "Default constructor called" << std::endl;
 }
 
-Fixed::Fixed(const int &param) : m_value(param << m_num)
+Fixed::Fixed(const int &param) : m_value(param << FRAC_BITS)
 {
 	std::cout << "Int contructor called" << std::endl;
 }
 
-Fixed::Fixed(const float &param) : m_value(std::roundf(param *(1 << 8)))
+Fixed::Fixed(const float &param) : m_value(roundf(param * (1 << FRAC_BITS)))
 {
 	std::cout << "Float contructor called" << std::endl;
 }
@@ -46,10 +45,10 @@ std::ostream &operator<<(std::ostream &out, const Fixed &f)
 
 float Fixed::toFloat(void) const
 {
-	return (float)m_value / (1 << m_num);
+	return static_cast<float>(this->m_value) / (1 << FRAC_BITS);
 }
 
 int Fixed::toInt(void) const
 {
-	return m_value >> m_num;
+	return m_value >> FRAC_BITS;
 }
